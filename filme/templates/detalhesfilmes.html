@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+    HomeFilmes Hashflix
+{% endblock %}
+
+{% block content %}
+    <div class="py-12">
+    <h1>Pagina de filmes: {{ object.titulo }}</h1>
+        <hr>
+        <p>{{ object }}</p>
+        <p>{{ object.descricao }}</p>
+        <img src="{{ filme.thumb.url }}">
+    </div>
+{% endblock %}
