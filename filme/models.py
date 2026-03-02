@@ -22,6 +22,13 @@ class Filme(models.Model):
         return self.titulo
 
 # Criar os eps
+class Episodio(models.Model):
+    filme = models.ForeignKey("Filme", related_name='episodios', on_delete=models.CASCADE)
+    titulo = models.CharField(max_length=100)
+    video = models.URLField()
+
+    def __str__(self):
+        return self.filme.titulo + " - " + self.titulo
 
 
 # Criar os usuarios
