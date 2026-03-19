@@ -18,6 +18,26 @@ class Detalhesfilmes(DetailView):
     model = Filme
     #object  (Object)
 
+    def get(self, request, *args, **kwargs):
+        # verificar o filme que esta sendo acessado
+        filme = self.get_object()
+        # adicionar uma vizualizacao nesta pagina
+        filme.vizualizacoes += 1
+        # salvar
+        filme.save()
+        return super().get(request, *args, **kwargs) # redireciona o usuario para a url final
+
+
+    def get_context_data(self, **kwargs):
+        context = super(Detalhesfilmes, self).get_context_data(**kwargs)
+        # Filtrar a categoria dos filmes cuja a categoria é igual a categoria do filme da pagina (context)
+        # self.get_object()
+        filmes_relacionados = Filme.objects.filter(categoria=self.get_object().categoria)[0:5]
+        context['filmes_relacionados'] = filmes_relacionados
+        return context
+
+
+
 
 # Create your views here. FBV (functions base views)
 #def homepage(request):

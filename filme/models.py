@@ -15,7 +15,7 @@ class Filme(models.Model):
     thumb = models.ImageField(upload_to='thumb_filmes')
     descricao = models.TextField(max_length=1000)
     categoria = models.CharField(max_length=15, choices=LISTA_CATEGORIAS)
-    vizualizcoes = models.IntegerField(default=0)
+    vizualizacoes = models.IntegerField(default=0)
     data_criacao = models.DateTimeField(default=timezone.now)
 
     def __str__(self):

@@ -6,10 +6,30 @@
 
 {% block content %}
     <div class="py-12">
-    <h1>Pagina de filmes: {{ object.titulo }}</h1>
+        <h1>Pagina de filmes: {{ object.titulo }}</h1>
         <hr>
         <p>{{ object }}</p>
         <p>{{ object.descricao }}</p>
+        <p>Vizualizações : {{ object.vizualizacoes }}</p>
         <img src="{{ filme.thumb.url }}">
+
+        <h2>Episódios</h2>
+        <br>
+        {% for episodio in object.episodios.all %}
+            <a href="{{ episodio.video }}">
+                <p>Episódio {{ forloop.counter }}: {{ episodio.titulo }}</p>
+            </a>
+        {% endfor %}
+    </div>
+<div class="py-12">
+    <h2>Filmes relacionados</h2>
+    <br>
+    {% for filme in filmes_relacionados %}
+        <p>
+            <a href="{% url 'filme:detalhesfilmes' filme.pk  %}">
+                {{ filme.titulo }}
+            </a>
+        </p>
+        {% endfor %}
     </div>
 {% endblock %}
