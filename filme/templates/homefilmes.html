@@ -1,27 +1,200 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block titulo %}
-    HomeFilmes Hashflix
+HomeFilmes Hashflix
 {% endblock %}
 
+
+{% block head %}
+<style>
+    .wrapper {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        position: relative;
+    }
+
+    .wrapper section {
+        min-width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        scroll-snap-align: start;
+        position: relative;
+        padding: 0 60px; /* espaço pras setas */
+    }
+
+    /* ITEM */
+    .item {
+        width: 22%;
+        overflow: hidden; /* resolve o hover estourando */
+        border-radius: 10px;
+    }
+
+    .item img {
+        width: 100%;
+        height: 157px;
+        object-fit: cover;
+        transition: 0.3s;
+    }
+
+    .item:hover {
+        z-index: 10;
+    }
+
+    .item:hover img {
+        transform: scale(1.1);
+    }
+
+    /* SETAS */
+    .arrow__btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 40px;
+        color: white;
+        z-index: 20;
+        text-decoration: none;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 5px 12px;
+        border-radius: 50%;
+    }
+
+    .arrow-left {
+        left: 10px;
+    }
+
+    .arrow-right {
+        right: 10px;
+    }
+
+    /* esconder scroll */
+    .wrapper::-webkit-scrollbar {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+
 {% block content %}
-    <div class="py-12">
-    <h1>Pagina de filmes</h1>
-    {% for filme in object_list %}
-        <hr>
-        <a href="{% url 'filme:detalhesfilmes' filme.pk  %}"><p>{{ filme.titulo }}</p></a>
-        <p>{{ filme.descricao }}</p>
-        <img src="{{ filme.thumb.url }}">
-    {% endfor %}
-    </div>
+<main class='bg-primary_black min-h-screen w-full'>
+    <section class="h-screen relative bg-no-repeat pb-8 pl-6 flex items-end bg-cover"
+             style="background-image: url('{{ filme_destaque.thumb.url }}');">
+        <div>
+            <h2 class="text-6xl font-semibold text-white my-4">
+                {{ filme_destaque.titulo }}
+            </h2>
+            <p class=" w-11/12 md:w-5/12 font-medium text-white my-4">
+                {{ filme_destaque.descricao }}
+            </p>
+            <div class="flex my-4">
+                <a href="{% url 'filme:detalhesfilmes' filme_destaque.pk  %}">
+                    <button class="flex items-center bg-white py-2 px-5 rounded-md" style='color:black;'>
+                        <ion-icon name="play" class="text-2xl"></ion-icon>
+                        <span class="ml-3 font-medium ">
+                                Play
+                        </span>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </section>
 
 
-    <div class="py-10">
-        <h2>Novos</h2>
-        {{ lista_filmes_recentes }}
-    </div>
-    <div class="py-10">
-        <h2>Em Alta</h2>
-        {{ lista_filmes_emAlta }}
-    </div>
+    <section class='bg-primary_black flex justify-center py-10'>
+        <div class="p-8 w-10/12 relative">
+            <h2 class="text-gray-200 text-2xl font-medium">
+                Novo
+            </h2>
+            <div class="wrapper mt-6">
+
+                <!-- SECTION 1 -->
+                <section id="section1">
+                    <a href="#section2" class="arrow__btn arrow-left">‹</a>
+                    {% for filme in lista_filmes_recentes %}
+                    {% if forloop.counter <= 4 %}
+                    <div class="item">
+                        <a href="{% url 'filme:detalhesfilmes' filme.pk  %}">
+                            <img src="{{ filme.thumb.url }}">
+                        </a>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+                    <a href="#section2" class="arrow__btn arrow-right">›</a>
+                </section>
+
+
+                <!-- SECTION 2 -->
+                {% if lista_filmes_recentes|length > 4 %}
+                <section id="section2">
+                    <a href="#section1" class="arrow__btn arrow-left">‹</a>
+
+                    {% for filme in lista_filmes_recentes %}
+                    {% if forloop.counter > 4 %}
+                    <div class="item">
+                        <a href="{% url 'filme:detalhesfilmes' filme.pk  %}">
+                            <img src="{{ filme.thumb.url }}">
+                        </a>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+                    <a href="#section1" class="arrow__btn arrow-right">›</a>
+                </section>
+                {% endif %}
+
+            </div>
+        </div>
+    </section>
+    
+    <section class='bg-primary_black flex justify-center py-10'>
+        <div class="p-8 w-10/12 relative">
+            <h2 class="text-gray-200 text-2xl font-medium">
+                Populares
+            </h2>
+            <div class="wrapper mt-6">
+
+                <!-- SECTION 1 -->
+                <section id="section1emaltar">
+                    <a href="#section2emaltar" class="arrow__btn arrow-left">‹</a>
+                    {% for filme in lista_filmes_emAlta %}
+                    {% if forloop.counter <= 4 %}
+                    <div class="item">
+                        <a href="{% url 'filme:detalhesfilmes' filme.pk  %}">
+                            <img src="{{ filme.thumb.url }}">
+                        </a>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+                    <a href="#section2emaltar" class="arrow__btn arrow-right">›</a>
+                </section>
+
+
+                <!-- SECTION 2 -->
+                {% if lista_filmes_emAlta|length > 4 %}
+                <section id="section2emaltar">
+                    <a href="#section1emaltar" class="arrow__btn arrow-left">‹</a>
+
+                    {% for filme in lista_filmes_emAlta %}
+                    {% if forloop.counter > 4 %}
+                    <div class="item">
+                        <a href="{% url 'filme:detalhesfilmes' filme.pk  %}">
+                            <img src="{{ filme.thumb.url }}">
+                        </a>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+                    <a href="#section1emaltar" class="arrow__btn arrow-right">›</a>
+                </section>
+                {% endif %}
+
+            </div>
+        </div>
+    </section>
+</main>
 {% endblock %}
